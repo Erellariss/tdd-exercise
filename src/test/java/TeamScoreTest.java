@@ -43,6 +43,15 @@ public class TeamScoreTest {
 
         assertEquals(11, score.getScore());
     }
+    @Test
+
+    public void shouldUpdateScoreToMaxLong() {
+        var score = new TeamScore(TEAM_NAME);
+
+        score.updateScore(Long.MAX_VALUE);
+
+        assertEquals(Long.MAX_VALUE, score.getScore());
+    }
 
     @Test
     public void shouldAllowUpdateToTheSameScore() {

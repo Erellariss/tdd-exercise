@@ -10,11 +10,24 @@ public class MatchInfo {
         this.awayTeamScore = new TeamScore(awayTeamName);
     }
 
-    public TeamScore getHomeTeamScore() {
-        return homeTeamScore;
+    public long getHomeTeamScore() {
+        return homeTeamScore.getScore();
     }
 
-    public TeamScore getAwayTeamScore() {
-        return awayTeamScore;
+    public long getAwayTeamScore() {
+        return awayTeamScore.getScore();
+    }
+
+    public String getHomeTeamName() {
+        return homeTeamScore.getTeamName();
+    }
+
+    public String getAwayTeamName() {
+        return awayTeamScore.getTeamName();
+    }
+
+    public void updateScores(long homeScore, long awayScore) {
+        this.homeTeamScore.updateScore(homeScore);
+        this.awayTeamScore.updateScore(awayScore);
     }
 }
