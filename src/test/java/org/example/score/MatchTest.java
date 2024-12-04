@@ -1,4 +1,5 @@
-import org.example.score.MatchInfo;
+package org.example.score;
+
 import org.example.score.exception.ErrorMessages;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

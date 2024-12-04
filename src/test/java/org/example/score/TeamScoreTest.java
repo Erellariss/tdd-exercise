@@ -1,4 +1,5 @@
-import org.example.score.TeamScore;
+package org.example.score;
+
 import org.example.score.exception.ErrorMessages;
 import org.junit.jupiter.api.Test;
 
