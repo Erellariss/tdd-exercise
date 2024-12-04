@@ -5,7 +5,7 @@ import org.example.score.exception.ErrorMessages;
 public class TeamScore {
 
     private final String teamName;
-    private long score;
+    private long score = 0;
 
     public TeamScore(String teamName) {
         if (teamName == null) {

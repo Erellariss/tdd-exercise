@@ -45,11 +45,29 @@ public class TeamScoreTest {
     }
 
     @Test
+    public void shouldAllowUpdateToTheSameScore() {
+        var score = new TeamScore(TEAM_NAME);
+
+        score.updateScore(11);
+        score.updateScore(11);
+
+        assertEquals(11, score.getScore());
+    }
+
+    @Test
     void shouldNotAllowToDecreaseScore() {
         var score = new TeamScore(TEAM_NAME);
 
         score.updateScore(11);
         var exception = assertThrows(IllegalArgumentException.class, () -> score.updateScore(1));
+        assertEquals(ErrorMessages.SCORE_CANNOT_BE_LESS_THAN_EXISTING, exception.getMessage());
+    }
+
+    @Test
+    void shouldNotAllowToAcceptNegativeScore() {
+        var score = new TeamScore(TEAM_NAME);
+
+        var exception = assertThrows(IllegalArgumentException.class, () -> score.updateScore(-123));
         assertEquals(ErrorMessages.SCORE_CANNOT_BE_LESS_THAN_EXISTING, exception.getMessage());
     }
 }
