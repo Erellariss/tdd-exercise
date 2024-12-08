@@ -49,9 +49,9 @@ public class TeamScoreTest {
     public void shouldUpdateScoreToMaxLong() {
         var score = new TeamScore(TEAM_NAME);
 
-        score.updateScore(Long.MAX_VALUE);
+        score.updateScore(Integer.MAX_VALUE);
 
-        assertEquals(Long.MAX_VALUE, score.getScore());
+        assertEquals(Integer.MAX_VALUE, score.getScore());
     }
 
     @Test

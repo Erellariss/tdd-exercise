@@ -23,11 +23,11 @@ public class MatchInfo implements Comparable<MatchInfo> {
         this.orderNo = orderNo;
     }
 
-    public long getHomeTeamScore() {
+    public int getHomeTeamScore() {
         return homeTeamScore.getScore();
     }
 
-    public long getAwayTeamScore() {
+    public int getAwayTeamScore() {
         return awayTeamScore.getScore();
     }
 
@@ -39,7 +39,7 @@ public class MatchInfo implements Comparable<MatchInfo> {
         return awayTeamScore.getTeamName();
     }
 
-    protected void updateScores(long homeScore, long awayScore) {
+    protected void updateScores(int homeScore, int awayScore) {
         this.homeTeamScore.updateScore(homeScore);
         this.awayTeamScore.updateScore(awayScore);
     }
@@ -48,7 +48,7 @@ public class MatchInfo implements Comparable<MatchInfo> {
         return orderNo;
     }
 
-    protected static MatchInfo of(String homeTeamName, String awayTeamName, long homeScore, long awayScore) {
+    protected static MatchInfo of(String homeTeamName, String awayTeamName, int homeScore, int awayScore) {
         var matchInfo = new MatchInfo(homeTeamName, awayTeamName);
         matchInfo.updateScores(homeScore, awayScore);
         return matchInfo;
@@ -56,8 +56,8 @@ public class MatchInfo implements Comparable<MatchInfo> {
 
     @Override
     public int compareTo(MatchInfo other) {
-        return Comparator.<MatchInfo, Long>comparing(info -> info.awayTeamScore.getScore() + info.homeTeamScore.getScore(), Long::compareUnsigned)
-                .thenComparing(MatchInfo::getOrderNo, Long::compareTo)
+        return Comparator.<MatchInfo, Long>comparing(info -> (long) (info.awayTeamScore.getScore() + info.homeTeamScore.getScore()), Long::compareTo)
+                .thenComparing(MatchInfo::getOrderNo)
                 .reversed()
                 .compare(this, other);
     }

@@ -65,7 +65,7 @@ public class MatchTest {
             "1, 1",
             "12314, 0"
     })
-    void shouldUpdateScores(long a, long b) {
+    void shouldUpdateScores(int a, int b) {
         var match = new MatchInfo(TEAM_A, TEAM_B);
 
         match.updateScores(a, b);
@@ -80,7 +80,7 @@ public class MatchTest {
             "-1, 0",
             "-1, -1"
     })
-    void shouldNotUpdateScores(long a, long b) {
+    void shouldNotUpdateScores(int a, int b) {
         var match = new MatchInfo(TEAM_A, TEAM_B);
 
         var exception = assertThrows(IllegalArgumentException.class, () -> match.updateScores(a, b));

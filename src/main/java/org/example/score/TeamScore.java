@@ -5,7 +5,7 @@ import org.example.score.exception.ErrorMessages;
 public class TeamScore {
 
     private final String teamName;
-    private long score = 0;
+    private int score = 0;
 
     public TeamScore(String teamName) {
         if (teamName == null) {
@@ -21,11 +21,11 @@ public class TeamScore {
         return teamName;
     }
 
-    public long getScore() {
+    public int getScore() {
         return score;
     }
 
-    public void updateScore(long score) {
+    public void updateScore(int score) {
         if (score < this.score) {
             throw new IllegalArgumentException(ErrorMessages.SCORE_CANNOT_BE_LESS_THAN_EXISTING);
         }

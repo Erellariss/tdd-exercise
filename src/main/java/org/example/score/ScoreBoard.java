@@ -40,7 +40,7 @@ public class ScoreBoard {
         teamsInPlay.remove(awayTeam);
     }
 
-    public void updateScores(String homeTeam, String awayTeam, long homeScore, long awayScore) {
+    public void updateScores(String homeTeam, String awayTeam, int homeScore, int awayScore) {
         var matchInfo = matchesMap.get(homeTeam + awayTeam);
         matchInfo.updateScores(homeScore, awayScore);
     }
