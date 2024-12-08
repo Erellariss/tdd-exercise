@@ -22,3 +22,7 @@ This is a TDD coding exercise.
 - Int range is enough to keep team score
 - Implementation is not thread safe
 
+# How to run
+```bash
+./mvnw clean install
+```
