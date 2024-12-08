@@ -2,8 +2,10 @@ package org.example.score;
 
 import org.junit.jupiter.api.Test;
 
-import static org.example.score.exception.ErrorMessages.TEAM_ALREADY_PLAYING;
-import static org.example.score.exception.ErrorMessages.TEAM_CANNOT_PLAY_MATCH_WITH_ITSELF;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.example.score.exception.ErrorMessages.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ScoreBoardTest {
@@ -27,7 +29,7 @@ public class ScoreBoardTest {
         board.startMatch(TEAM_A, TEAM_B);
         var matches = board.getMatches();
         var newMatchInfo = matches.getFirst();
-        
+
         //then
         assertNotNull(newMatchInfo);
         assertEquals(TEAM_A, newMatchInfo.getHomeTeamName());
@@ -82,5 +84,106 @@ public class ScoreBoardTest {
         board.finishMatch(TEAM_A, TEAM_B);
 
         assertTrue(board.getMatches().isEmpty());
+    }
+
+    @Test
+    void shouldNotAllowToFinishNonExistingMatch() {
+        var board = new ScoreBoard();
+
+        var runtimeException = assertThrows(RuntimeException.class, () -> board.finishMatch(TEAM_A, TEAM_B));
+        assertEquals(TEAMS_ARE_NOT_IN_PLAY, runtimeException.getMessage());
+    }
+
+    @Test
+    void shouldAllowToUpdateMatchScores() {
+        //given
+        var board = new ScoreBoard();
+        board.startMatch(TEAM_A, TEAM_B);
+
+        board.updateScores(TEAM_A, TEAM_B, 2, 3);
+        var matches = board.getMatches();
+        var matchInfo = matches.getFirst();
+
+        assertEquals(1, matches.size());
+        assertEquals(2, matchInfo.getHomeTeamScore());
+        assertEquals(3, matchInfo.getAwayTeamScore());
+    }
+
+    @Test
+    void shouldAllowToUpdateMatchScoresMultipleTimes() {
+        //given
+        var board = new ScoreBoard();
+        board.startMatch(TEAM_A, TEAM_B);
+
+        board.updateScores(TEAM_A, TEAM_B, 2, 3);
+        board.updateScores(TEAM_A, TEAM_B, 3, 3);
+        board.updateScores(TEAM_A, TEAM_B, 5, 10);
+        var matches = board.getMatches();
+        var matchInfo = matches.getFirst();
+
+        assertEquals(1, matches.size());
+        assertEquals(5, matchInfo.getHomeTeamScore());
+        assertEquals(10, matchInfo.getAwayTeamScore());
+    }
+
+    @Test
+    void shouldOrderMatchesByRequirements() {
+        var board = new ScoreBoard();
+        var givenTeams = List.of(
+                MatchInfo.of("Mexico", "Canada", 0, 5),
+                MatchInfo.of("Spain", "Brazil", 10, 2),
+                MatchInfo.of("Germany", "France", 2, 2),
+                MatchInfo.of("Uruguay", "Italy", 6, 6),
+                MatchInfo.of("Argentina", "Australia", 3, 1)
+        );
+        for (MatchInfo givenTeam : givenTeams) {
+            board.startMatch(givenTeam.getHomeTeamName(), givenTeam.getAwayTeamName());
+        }
+        for (MatchInfo givenTeam : givenTeams) {
+            board.updateScores(givenTeam.getHomeTeamName(), givenTeam.getAwayTeamName(), givenTeam.getHomeTeamScore(), givenTeam.getAwayTeamScore());
+        }
+
+        var expectedOrderedTeams = List.of(
+                MatchInfo.of("Uruguay", "Italy", 6, 6),
+                MatchInfo.of("Spain", "Brazil", 10, 2),
+                MatchInfo.of("Mexico", "Canada", 0, 5),
+                MatchInfo.of("Argentina", "Australia", 3, 1),
+                MatchInfo.of("Germany", "France", 2, 2)
+        );
+
+        var matches = new ArrayList<>(board.getMatches());
+        assertEquals(5, matches.size());
+        for (int i = 0; i < matches.size(); i++) {
+            assertMatchInfo(expectedOrderedTeams.get(i), matches.get(i));
+        }
+    }
+
+    private static void assertMatchInfo(MatchInfo expected, MatchInfo given) {
+        assertEquals(expected.getHomeTeamName(), given.getHomeTeamName());
+        assertEquals(expected.getAwayTeamName(), given.getAwayTeamName());
+        assertEquals(expected.getHomeTeamScore(), given.getHomeTeamScore());
+        assertEquals(expected.getAwayTeamScore(), given.getAwayTeamScore());
+    }
+
+    @Test
+    void shouldRespectMatchOrderByCreationOrderIfSumOfScoreIsTheSame() {
+        var board = new ScoreBoard();
+        board.startMatch("a", "b");
+        board.startMatch("c", "d");
+        board.startMatch("e", "f");
+
+        board.updateScores("a", "b", 2, 0);
+        board.updateScores("c", "d", 1, 1);
+        board.updateScores("e", "f", 0, 2);
+
+        var matches = board.getMatches();
+        assertEquals(3, matches.size());
+        var iterator = matches.iterator();
+        var prev = iterator.next();
+        while (iterator.hasNext()) {
+            var next = iterator.next();
+            assertTrue(next.getOrderNo() < prev.getOrderNo());
+            prev = next;
+        }
     }
 }
