@@ -186,4 +186,33 @@ public class ScoreBoardTest {
             prev = next;
         }
     }
+
+    @Test
+    void shouldRetrieveSpecificTeamScore() {
+        var board = new ScoreBoard();
+        board.startMatch("a", "b");
+        board.updateScores("a", "b", 2, 5);
+
+        assertEquals(2, board.getTeamScore("a"));
+        assertEquals(5, board.getTeamScore("b"));
+    }
+
+    @Test
+    void shouldRetrieveSpecificTeamScoreWithoutMatchUpdate() {
+        var board = new ScoreBoard();
+        board.startMatch("a", "b");
+
+        assertEquals(0, board.getTeamScore("a"));
+        assertEquals(0, board.getTeamScore("b"));
+    }
+
+    @Test
+    void shouldNotRetrieveByNonExistentTeam() {
+        var board = new ScoreBoard();
+        board.startMatch("a", "b");
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> board.getTeamScore("c"));
+        assertEquals(TEAM_IS_NOT_IN_PLAY, exception.getMessage());
+    }
+
 }
